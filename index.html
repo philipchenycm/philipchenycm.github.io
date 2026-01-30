@@ -101,8 +101,7 @@
             <div><label>Report Date(日期):</label><input type="date"></div>
         </div>
 
-        <h2>1. Visual Summary</h2>
-		<h2>1. 可视化图表</h2>
+        <h2>1. Visual Summary(可视化图表)</h2>
         <div class="charts-container">
             <div class="chart-box"><canvas id="c1_composition"></canvas></div>
             <div class="chart-box"><canvas id="c2_absence"></canvas></div>
@@ -110,11 +109,10 @@
             <div class="chart-box"><canvas id="c4_incident_compare"></canvas></div>
         </div>
 
-        <h2>2. Workforce Scope Definition</h2>
-		<h2>2. 提供的服务</h2>
+        <h2>2. Workforce Scope Definition(提供的服务)</h2>
         <div class="header-grid" style="margin-bottom:0;">
             <div>
-                <strong>Workforce Nationality:</strong>
+                <strong>Workforce Nationality(国籍):</strong>
                 <div class="checkbox-group">
                     <label class="checkbox-item"><input type="checkbox"> Thai</label>
                     <label class="checkbox-item"><input type="checkbox"> Burmese</label>
@@ -122,45 +120,45 @@
                 </div>
             </div>
             <div>
-                <strong>Service Coverage:</strong>
+                <strong>Service Coverage(服务范围):</strong>
                 <div class="checkbox-group">
-                    <label class="checkbox-item"><input type="checkbox"> Recruitment Only</label>
-                    <label class="checkbox-item"><input type="checkbox"> Subcontracting</label>
-                    <label class="checkbox-item"><input type="checkbox"> Transport</label>
-                    <label class="checkbox-item"><input type="checkbox"> Living</label>
-		  <label class="checkbox-item">Other: <input type="text" style="width: 60px;"></label>
+                    <label class="checkbox-item"><input type="checkbox"> Recruitment Only(只招聘)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Subcontracting(外包)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Transport(交通)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Living(住宿)</label>
+		  <label class="checkbox-item">Other(其他): <input type="text" style="width: 60px;"></label>
                 </div>
             </div>
         </div>
 
-        <h2>3. Workforce Overview</h2>
+        <h2>3. Workforce Overview(劳动力总览)</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Thai Workers</th>
-                    <th>Burmese Workers</th>
-                    <th>Other</th>
-                    <th>Total</th>
+                    <th>Category(工种)</th>
+                    <th>Thai Workers(泰国)</th>
+                    <th>Burmese Workers(缅甸)</th>
+                    <th>Other(其他)</th>
+                    <th>Total(全部)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Total On-site</td>
+                    <td>Total On-site(产线总人数)</td>
                     <td><input type="number" id="thai_total" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_total" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_total" value="0" oninput="calc()"></td>
                     <td><input type="number" id="total_onsite" readonly></td>
                 </tr>
                 <tr>
-                    <td>Newly Deployed</td>
+                    <td>Newly Deployed(新招聘)</td>
                     <td><input type="number" id="thai_new" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_new" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_new" value="0" oninput="calc()"></td>
                     <td><input type="number" id="total_new" readonly></td>
                 </tr>
                 <tr>
-                    <td>Workers Exited</td>
+                    <td>Workers Exited(离职)</td>
                     <td><input type="number" id="thai_exit" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_exit" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_exit" value="0" oninput="calc()"></td>
@@ -169,41 +167,41 @@
             </tbody>
         </table>
 
-        <h2>4. Attendance Status</h2>
+        <h2>4. Attendance Status(考情情况)</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Attendance Item</th>
-                    <th>Thai</th>
-                    <th>Burmese</th>
-                    <th>Other</th>
-                    <th>Total</th>
+                    <th>Attendance Item(工种)</th>
+                    <th>Thai(泰国)</th>
+                    <th>Burmese(缅甸)</th>
+                    <th>Other(其他)</th>
+                    <th>Total(全部)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Late Arrival / Early Dep.</td>
+                    <td>Late Arrival / Early Dep.(迟到早退)</td>
                     <td><input type="number" id="thai_late" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_late" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_late" value="0" oninput="calc()"></td>
                     <td><input type="number" id="total_late" readonly></td>
                 </tr>
                 <tr>
-                    <td>Sick Leave</td>
+                    <td>Sick Leave(病假)</td>
                     <td><input type="number" id="thai_sick" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_sick" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_sick" value="0" oninput="calc()"></td>
                     <td><input type="number" id="total_sick" readonly></td>
                 </tr>
                 <tr>
-                    <td>Personal Leave</td>
+                    <td>Personal Leave(个人)</td>
                     <td><input type="number" id="thai_personal" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_personal" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_personal" value="0" oninput="calc()"></td>
                     <td><input type="number" id="total_personal" readonly></td>
                 </tr>
                 <tr>
-                    <td>Absent Without Notice</td>
+                    <td>Absent Without Notice(擅自请假)</td>
                     <td><input type="number" id="thai_absent" value="0" oninput="calc()"></td>
                     <td><input type="number" id="burmese_absent" value="0" oninput="calc()"></td>
                     <td><input type="number" id="other_absent" value="0" oninput="calc()"></td>
@@ -212,7 +210,7 @@
             </tbody>
         </table>
 
-        <h2>5. Workforce Performance</h2>
+        <h2>5. Workforce Performance(工作评价)</h2>
         <div class="checkbox-group" style="padding: 10px; background: #f8f9fa; border: 1px solid #ddd;">
             <strong>Overall Rating:</strong>
             <label class="checkbox-item" style="cursor: pointer; margin-left: 10px;"><input type="radio" name="rating"> Excellent</label>
@@ -222,18 +220,18 @@
 	<textarea></textarea>
         </div>
 
-        <h2>6. Compliance Status</h2>
+        <h2>6. Compliance Status(合规性）</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Item</th>
-                    <th>Status / Details</th>
-                    <th>Risk Level</th>
+                    <th>Item(项目)</th>
+                    <th>Status / Details(状态)</th>
+                    <th>Risk Level(危险性)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Work Permits / Visas</td>
+                    <td>Work Permits / Visas(签证/工作证)</td>
                     <td><input type="text"></td>
                     <td>
                         <div class="traffic-light-container">
@@ -244,7 +242,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Social Security</td>
+                    <td>Social Security(社保)</td>
                     <td><input type="text"></td>
                     <td>
                         <div class="traffic-light-container">
@@ -255,7 +253,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Tax ID</td>
+                    <td>Tax ID(税号)</td>
                     <td><input type="text"></td>
                     <td>
                         <div class="traffic-light-container">
@@ -266,7 +264,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Bank Account</td>
+                    <td>Bank Account(银行卡)</td>
                     <td><input type="text"></td>
                     <td>
                         <div class="traffic-light-container">
@@ -281,29 +279,29 @@
 
         <div style="page-break-before: always;"></div> 
 
-        <h2>7. Logistics & Issues</h2>
+        <h2>7. Logistics & Issues(调度和问题)</h2>
         <div class="header-grid">
-            <div><label>Transportation:</label><select><option>Smooth</option><option>Issues</option></select></div>
-            <div><label>Accommodation:</label><select><option>Satisfactory</option><option>Issues</option></select></div>
+            <div><label>Transportation:</label><select><option>Satisfactory</option><option>Issues</option></select></div>
+            <div><label>Living:</label><select><option>Satisfactory</option><option>Issues</option></select></div>
         </div>
-        <label>Major Issues:</label>
+        <label>Major Issues(严重问题):</label>
         <textarea placeholder="Leave blank if none"></textarea>
 
-        <h2>8. Requests & Planning</h2>
+        <h2>8. Requests & Planning(计划和需求)</h2>
         <label>Anticipated Workforce Changes:</label>
 	<div class="checkbox-group">
-            <div class="checkbox-item"><input type="checkbox"> Add Workers</div>
-            <div class="checkbox-item"><input type="checkbox"> Replace Workers</div>
-            <div class="checkbox-item"><input type="checkbox"> Discipline Support</div>
-            <div class="checkbox-item"><input type="checkbox"> Interpreter Support</div>
-	   <div class="checkbox-item"><input type="checkbox"> Other</div>
+            <div class="checkbox-item"><input type="checkbox"> Add Workers(增加员工)</div>
+            <div class="checkbox-item"><input type="checkbox"> Replace Workers(替换员工)</div>
+            <div class="checkbox-item"><input type="checkbox"> Discipline Support(管教员工)</div>
+            <div class="checkbox-item"><input type="checkbox"> Interpreter Support(翻译需求)</div>
+	   <div class="checkbox-item"><input type="checkbox"> Other(其他)</div>
         </div>
         <textarea></textarea>
 
         <div style="margin-top: 40px; border-top: 2px solid #333; padding-top: 10px;">
             <div class="header-grid">
-                <div><label>Manager Signature:</label><div style="height: 40px; border-bottom: 1px solid #000;"></div></div>
-                <div><label>Date:</label><input type="text"></div>
+                <div><label>Manager Signature(主管签字):</label><div style="height: 40px; border-bottom: 1px solid #000;"></div></div>
+                <div><label>Date(日期):</label><input type="text"></div>
             </div>
         </div>
     </div>
