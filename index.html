@@ -114,9 +114,9 @@
             <div>
                 <strong>Workforce Nationality(国籍):</strong>
                 <div class="checkbox-group">
-                    <label class="checkbox-item"><input type="checkbox"> Thai</label>
-                    <label class="checkbox-item"><input type="checkbox"> Burmese</label>
-                    <label class="checkbox-item">Other: <input type="text" style="width: 60px;"></label>
+                    <label class="checkbox-item"><input type="checkbox"> Thai(泰国)</label>
+                    <label class="checkbox-item"><input type="checkbox"> Burmese(缅甸)</label>
+                    <label class="checkbox-item">Other(其他): <input type="text" style="width: 60px;"></label>
                 </div>
             </div>
             <div>
@@ -313,14 +313,14 @@
             // C1: Composition (Pie)
             chart1 = new Chart(document.getElementById('c1_composition'), {
                 type: 'pie',
-                data: { labels: ['Thai', 'Burmese', 'Other'], datasets: [{ data: [0, 0, 0], backgroundColor: ['#003366', '#FF9900', '#999999'] }] },
+                data: { labels: ['Thai(泰国)', 'Burmese(缅甸)', 'Other(其他)'], datasets: [{ data: [0, 0, 0], backgroundColor: ['#003366', '#FF9900', '#999999'] }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Workforce Composition' } } }
             });
 
             // C2: Absence Breakdown (Bar)
             chart2 = new Chart(document.getElementById('c2_absence'), {
                 type: 'bar',
-                data: { labels: ['Late/Early', 'Sick', 'Personal', 'Absent'], datasets: [{ label: 'Cases', data: [0, 0, 0, 0], backgroundColor: '#dc3545' }] },
+                data: { labels: ['Late/Early(早退)', 'Sick(生病)', 'Personal(个人)', 'Absent(缺勤)'], datasets: [{ label: 'Cases', data: [0, 0, 0, 0], backgroundColor: '#dc3545' }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Attendance Issue Types' }, legend: {display:false} } }
             });
 
@@ -328,11 +328,11 @@
             chart3 = new Chart(document.getElementById('c3_dynamics'), {
                 type: 'bar',
                 data: {
-                    labels: ['Thai', 'Burmese', 'Other'],
+                    labels: ['Thai(泰国)', 'Burmese(缅甸)', 'Other(其他)'],
                     datasets: [
-                        { label: 'Total', data: [0,0,0], backgroundColor: '#003366' },
-                        { label: 'New', data: [0,0,0], backgroundColor: '#28a745' },
-                        { label: 'Exited', data: [0,0,0], backgroundColor: '#ffc107' }
+                        { label: 'Total(全部)', data: [0,0,0], backgroundColor: '#003366' },
+                        { label: 'New(新)', data: [0,0,0], backgroundColor: '#28a745' },
+                        { label: 'Exited(离职)', data: [0,0,0], backgroundColor: '#ffc107' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Workforce Categories' } } }
@@ -341,7 +341,7 @@
             // C4: Incident Comparison (Bar)
             chart4 = new Chart(document.getElementById('c4_incident_compare'), {
                 type: 'bar',
-                data: { labels: ['Thai', 'Burmese', 'Other'], datasets: [{ label: 'Total Incidents', data: [0, 0, 0], backgroundColor: '#6f42c1' }] },
+                data: { labels: ['Thai(泰国)', 'Burmese(缅甸)', 'Other(其他)'], datasets: [{ label: 'Total Incidents', data: [0, 0, 0], backgroundColor: '#6f42c1' }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Total Incidents by Nationality' }, legend: {display:false} } }
             });
         };
