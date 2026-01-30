@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Workforce Service Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            padding: 15mm;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        /* Typography */
+        h1 { font-size: 24px; color: #003366; text-transform: uppercase; border-bottom: 2px solid #003366; padding-bottom: 10px; margin-bottom: 20px; }
+        h2 { font-size: 16px; background-color: #003366 !important; color: white !important; padding: 5px 10px; margin-top: 25px; margin-bottom: 10px; -webkit-print-color-adjust: exact; }
+        .header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        label { font-weight: bold; font-size: 12px; display: block; margin-bottom: 3px; }
+        
+        /* Inputs */
+        input[type="text"], input[type="date"], input[type="number"], textarea, select {
+            width: 100%; box-sizing: border-box; border: 1px solid #ccc; padding: 5px; font-size: 12px; font-family: inherit; background: #fdfdfd;
+        }
+        textarea { resize: vertical; height: 60px; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; }
+        th, td { border: 1px solid #999; padding: 5px; text-align: left; vertical-align: middle; }
+        th { background-color: #f0f0f0 !important; font-weight: bold; -webkit-print-color-adjust: exact; }
+        input[readonly] { background-color: #eee !important; color: #333; font-weight: bold; pointer-events: none; }
+
+        /* Checkboxes & Radios */
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; font-size: 12px; margin-bottom: 5px; }
+        .checkbox-item { display: flex; align-items: center; gap: 5px; }
+        
+        /* Charts Grid (2x2) */
+        .charts-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            background: #f9f9f9; 
+        }
+        .chart-box { height: 180px; position: relative; border: 1px solid #eee; background: white; padding: 5px; }
+        
+        /* Traffic Lights */
+        .traffic-light-container { display: flex; gap: 10px; align-items: center; margin-top: 5px; }
+        .traffic-option { display: flex; align-items: center; gap: 5px; font-size: 11px; cursor: pointer; }
+        .dot { height: 15px; width: 15px; border-radius: 50%; border: 1px solid #999; display: inline-block; background: #fff;}
+        .traffic-light-container input[type="radio"] { display: none; } 
+        .traffic-light-container input[type="radio"]:checked + .dot.green { background-color: #28a745 !important; border-color: #28a745; -webkit-print-color-adjust: exact; }
+        .traffic-light-container input[type="radio"]:checked + .dot.yellow { background-color: #ffc107 !important; border-color: #ffc107; -webkit-print-color-adjust: exact; }
+        .traffic-light-container input[type="radio"]:checked + .dot.red { background-color: #dc3545 !important; border-color: #dc3545; -webkit-print-color-adjust: exact; }
+
+        /* Buttons */
+        .btn-print {
+            position: fixed; top: 20px; right: 20px; padding: 10px 20px; 
+            background: #007bff; color: white; border: none; cursor: pointer; 
+            font-size: 14px; font-weight: bold; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        @media print {
+            body { background: none; margin: 0; padding: 0; }
+            .page { box-shadow: none; width: 100%; padding: 0; margin: 0; }
+            .btn-print { display: none; }
+            input, textarea { border: none; border-bottom: 1px solid #ccc; background: transparent; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .chart-box { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="btn-print" onclick="alert('Reminder: Ensure \'Background Graphics\' is checked in your printer settings.'); window.print();">Print / Save as PDF</button>
+
+    <div class="page">
+        <h1>Weekly Workforce Service Report</h1>
+        
+        <div class="header-grid">
+            <div><label>Reporting Period:</label><input type="text" placeholder="e.g., Oct 1 - Oct 7, 2023"></div>
+            <div><label>Client Name:</label><input type="text"></div>
+            <div><label>Site Location:</label><input type="text"></div>
+            <div><label>Report Prepared By:</label><input type="text" value="YCM Consulting Co., Ltd." readonly></div>
+            <div><label>Report Author:</label><input type="text"></div>
+            <div><label>Report Date:</label><input type="date"></div>
+        </div>
+
+        <h2>1. Visual Summary</h2>
+        <div class="charts-container">
+            <div class="chart-box"><canvas id="c1_composition"></canvas></div>
+            <div class="chart-box"><canvas id="c2_absence"></canvas></div>
+            <div class="chart-box"><canvas id="c3_dynamics"></canvas></div>
+            <div class="chart-box"><canvas id="c4_incident_compare"></canvas></div>
+        </div>
+
+        <h2>2. Workforce Scope Definition</h2>
+        <div class="header-grid" style="margin-bottom:0;">
+            <div>
+                <strong>Workforce Nationality:</strong>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox"> Thai</label>
+                    <label class="checkbox-item"><input type="checkbox"> Burmese</label>
+                    <label class="checkbox-item">Other: <input type="text" style="width: 60px;"></label>
+                </div>
+            </div>
+            <div>
+                <strong>Service Coverage:</strong>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox"> Recruitment Only</label>
+                    <label class="checkbox-item"><input type="checkbox"> Subcontracting</label>
+                    <label class="checkbox-item"><input type="checkbox"> Transport</label>
+                    <label class="checkbox-item"><input type="checkbox"> Living</label>
+		  <label class="checkbox-item">Other: <input type="text" style="width: 60px;"></label>
+                </div>
+            </div>
+        </div>
+
+        <h2>3. Workforce Overview</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Thai Workers</th>
+                    <th>Burmese Workers</th>
+                    <th>Other</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Total On-site</td>
+                    <td><input type="number" id="thai_total" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_total" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_total" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_onsite" readonly></td>
+                </tr>
+                <tr>
+                    <td>Newly Deployed</td>
+                    <td><input type="number" id="thai_new" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_new" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_new" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_new" readonly></td>
+                </tr>
+                <tr>
+                    <td>Workers Exited</td>
+                    <td><input type="number" id="thai_exit" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_exit" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_exit" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_exit" readonly></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. Attendance Status</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attendance Item</th>
+                    <th>Thai</th>
+                    <th>Burmese</th>
+                    <th>Other</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Late Arrival / Early Dep.</td>
+                    <td><input type="number" id="thai_late" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_late" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_late" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_late" readonly></td>
+                </tr>
+                <tr>
+                    <td>Sick Leave</td>
+                    <td><input type="number" id="thai_sick" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_sick" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_sick" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_sick" readonly></td>
+                </tr>
+                <tr>
+                    <td>Personal Leave</td>
+                    <td><input type="number" id="thai_personal" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_personal" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_personal" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_personal" readonly></td>
+                </tr>
+                <tr>
+                    <td>Absent Without Notice</td>
+                    <td><input type="number" id="thai_absent" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="burmese_absent" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="other_absent" value="0" oninput="calc()"></td>
+                    <td><input type="number" id="total_absent" readonly></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>5. Workforce Performance</h2>
+        <div class="checkbox-group" style="padding: 10px; background: #f8f9fa; border: 1px solid #ddd;">
+            <strong>Overall Rating:</strong>
+            <label class="checkbox-item" style="cursor: pointer; margin-left: 10px;"><input type="radio" name="rating"> Excellent</label>
+            <label class="checkbox-item" style="cursor: pointer;"><input type="radio" name="rating"> Good</label>
+            <label class="checkbox-item" style="cursor: pointer;"><input type="radio" name="rating"> Satisfactory</label>
+            <label class="checkbox-item" style="cursor: pointer;"><input type="radio" name="rating"> Improvement Needed</label>
+	<textarea></textarea>
+        </div>
+
+        <h2>6. Compliance Status</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Status / Details</th>
+                    <th>Risk Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Work Permits / Visas</td>
+                    <td><input type="text"></td>
+                    <td>
+                        <div class="traffic-light-container">
+                            <label class="traffic-option"><input type="radio" name="c1"><span class="dot green"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c1"><span class="dot yellow"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c1"><span class="dot red"></span></label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Social Security</td>
+                    <td><input type="text"></td>
+                    <td>
+                        <div class="traffic-light-container">
+                            <label class="traffic-option"><input type="radio" name="c2"><span class="dot green"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c2"><span class="dot yellow"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c2"><span class="dot red"></span></label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tax ID</td>
+                    <td><input type="text"></td>
+                    <td>
+                        <div class="traffic-light-container">
+                            <label class="traffic-option"><input type="radio" name="c3"><span class="dot green"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c3"><span class="dot yellow"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c3"><span class="dot red"></span></label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bank Account</td>
+                    <td><input type="text"></td>
+                    <td>
+                        <div class="traffic-light-container">
+                            <label class="traffic-option"><input type="radio" name="c4"><span class="dot green"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c4"><span class="dot yellow"></span></label>
+                            <label class="traffic-option"><input type="radio" name="c4"><span class="dot red"></span></label>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="page-break-before: always;"></div> 
+
+        <h2>7. Logistics & Issues</h2>
+        <div class="header-grid">
+            <div><label>Transportation:</label><select><option>Smooth</option><option>Issues</option></select></div>
+            <div><label>Accommodation:</label><select><option>Satisfactory</option><option>Issues</option></select></div>
+        </div>
+        <label>Major Issues:</label>
+        <textarea placeholder="Leave blank if none"></textarea>
+
+        <h2>8. Requests & Planning</h2>
+        <label>Anticipated Workforce Changes:</label>
+	<div class="checkbox-group">
+            <div class="checkbox-item"><input type="checkbox"> Add Workers</div>
+            <div class="checkbox-item"><input type="checkbox"> Replace Workers</div>
+            <div class="checkbox-item"><input type="checkbox"> Discipline Support</div>
+            <div class="checkbox-item"><input type="checkbox"> Interpreter Support</div>
+	   <div class="checkbox-item"><input type="checkbox"> Other</div>
+        </div>
+        <textarea></textarea>
+
+        <div style="margin-top: 40px; border-top: 2px solid #333; padding-top: 10px;">
+            <div class="header-grid">
+                <div><label>Manager Signature:</label><div style="height: 40px; border-bottom: 1px solid #000;"></div></div>
+                <div><label>Date:</label><input type="text"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart1, chart2, chart3, chart4;
+
+        window.onload = function() {
+            // C1: Composition (Pie)
+            chart1 = new Chart(document.getElementById('c1_composition'), {
+                type: 'pie',
+                data: { labels: ['Thai', 'Burmese', 'Other'], datasets: [{ data: [0, 0, 0], backgroundColor: ['#003366', '#FF9900', '#999999'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Workforce Composition' } } }
+            });
+
+            // C2: Absence Breakdown (Bar)
+            chart2 = new Chart(document.getElementById('c2_absence'), {
+                type: 'bar',
+                data: { labels: ['Late/Early', 'Sick', 'Personal', 'Absent'], datasets: [{ label: 'Cases', data: [0, 0, 0, 0], backgroundColor: '#dc3545' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Attendance Issue Types' }, legend: {display:false} } }
+            });
+
+            // C3: Dynamics (Grouped Bar)
+            chart3 = new Chart(document.getElementById('c3_dynamics'), {
+                type: 'bar',
+                data: {
+                    labels: ['Thai', 'Burmese', 'Other'],
+                    datasets: [
+                        { label: 'Total', data: [0,0,0], backgroundColor: '#003366' },
+                        { label: 'New', data: [0,0,0], backgroundColor: '#28a745' },
+                        { label: 'Exited', data: [0,0,0], backgroundColor: '#ffc107' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Workforce Categories' } } }
+            });
+
+            // C4: Incident Comparison (Bar)
+            chart4 = new Chart(document.getElementById('c4_incident_compare'), {
+                type: 'bar',
+                data: { labels: ['Thai', 'Burmese', 'Other'], datasets: [{ label: 'Total Incidents', data: [0, 0, 0], backgroundColor: '#6f42c1' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Total Incidents by Nationality' }, legend: {display:false} } }
+            });
+        };
+
+        function val(id) { return Number(document.getElementById(id).value) || 0; }
+        function set(id, v) { document.getElementById(id).value = v; }
+
+        function calc() {
+            // 1. Overview
+            let tTotal = val('thai_total'), bTotal = val('burmese_total'), oTotal = val('other_total');
+            let tNew = val('thai_new'), bNew = val('burmese_new'), oNew = val('other_new');
+            let tExit = val('thai_exit'), bExit = val('burmese_exit'), oExit = val('other_exit');
+
+            set('total_onsite', tTotal + bTotal + oTotal);
+            set('total_new', tNew + bNew + oNew);
+            set('total_exit', tExit + bExit + oExit);
+
+            // 2. Attendance
+            let tLate = val('thai_late'), bLate = val('burmese_late'), oLate = val('other_late');
+            let tSick = val('thai_sick'), bSick = val('burmese_sick'), oSick = val('other_sick');
+            let tPers = val('thai_personal'), bPers = val('burmese_personal'), oPers = val('other_personal');
+            let tAbse = val('thai_absent'), bAbse = val('burmese_absent'), oAbse = val('other_absent');
+
+            let totLate = tLate + bLate + oLate;
+            let totSick = tSick + bSick + oSick;
+            let totPers = tPers + bPers + oPers;
+            let totAbse = tAbse + bAbse + oAbse;
+
+            set('total_late', totLate); set('total_sick', totSick); set('total_personal', totPers); set('total_absent', totAbse);
+
+            // 3. Update Charts
+            // C1
+            chart1.data.datasets[0].data = [tTotal, bTotal, oTotal];
+            chart1.update();
+
+            // C2
+            chart2.data.datasets[0].data = [totLate, totSick, totPers, totAbse];
+            chart2.update();
+
+            // C3 (Grouped)
+            chart3.data.datasets[0].data = [tTotal, bTotal, oTotal]; // Total Series
+            chart3.data.datasets[1].data = [tNew, bNew, oNew];       // New Series
+            chart3.data.datasets[2].data = [tExit, bExit, oExit];    // Exit Series
+            chart3.update();
+
+            // C4 (Total Incidents per Nationality)
+            let tIncidents = tLate + tSick + tPers + tAbse;
+            let bIncidents = bLate + bSick + bPers + bAbse;
+            let oIncidents = oLate + oSick + oPers + oAbse;
+            chart4.data.datasets[0].data = [tIncidents, bIncidents, oIncidents];
+            chart4.update();
+        }
+    </script>
+</body>
+</html>
